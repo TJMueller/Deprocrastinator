@@ -21,6 +21,11 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.toDoListArray = [NSMutableArray arrayWithObjects: @"Laundry", @"Homework", @"Call mom", @"cook dinner", nil];
+    self.toDoListTableView.allowsMultipleSelectionDuringEditing = NO;
+}
+
+-(IBAction)swipeToChangeColor:(UISwipeGestureRecognizer *)sender {
+    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -44,7 +49,6 @@
         sender.title = @"Edit";
         [self.toDoListTableView setEditing:NO animated:YES];
     }
-
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -56,6 +60,19 @@
 -(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     cell.textColor = [UIColor greenColor];
+}
+
+-(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [self.toDoListArray removeObjectAtIndex:indexPath.row];
+    }
+
+    [self.toDoListTableView reloadData];
+}
+
+-(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
+    return YES;
 }
 
 @end
