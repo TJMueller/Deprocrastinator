@@ -13,7 +13,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property NSMutableArray *toDoListArray;
 @property (weak, nonatomic) IBOutlet UITableView *toDoListTableView;
-
 @end
 
 @implementation ViewController
@@ -21,7 +20,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.toDoListArray = [NSMutableArray arrayWithObjects: @"Laundry", @"Homework", @"Call mom", @"cook dinner", nil];
-    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -42,15 +40,18 @@
     } else{
         sender.title = @"Edit";
     }
-    
+
+    if ([self.toDoListTableView isEditing]) {
+        [self.toDoListTableView setEditing:NO animated:YES];
+    } else {
+        [self.toDoListTableView setEditing:YES animated:YES];
+    }
 }
-
-
-
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CellID"];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [self.toDoListArray objectAtIndex:indexPath.row]];
+    [self tableView:tableView canEditRowAtIndexPath:indexPath];
     return cell;
 }
 
