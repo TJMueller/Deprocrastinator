@@ -17,6 +17,11 @@
 @property UITableViewCell *selectedCell;
 @property CGRect cellBounds;
 @property CGPoint pointOfSwipe;
+@property NSIndexPath *deleteRow;
+
+//TJTrial
+@property NSMutableArray *toDoListColor;
+
 @end
 
 @implementation ViewController
@@ -25,14 +30,29 @@
     [super viewDidLoad];
     self.toDoListArray = [NSMutableArray arrayWithObjects: @"Laundry", @"Homework", @"Call mom", @"cook dinner", nil];
     self.toDoListTableView.allowsMultipleSelectionDuringEditing = NO;
+    //TJTrial
+    self.toDoListColor = [NSMutableArray arrayWithObjects:[UIColor redColor],[UIColor greenColor], [UIColor yellowColor],[UIColor blackColor],  nil];
 }
 
--(IBAction)swipeToChangeColor:(UISwipeGestureRecognizer *)sender {
-    if (sender.state == UIGestureRecognizerStateEnded) {
-        self.pointOfSwipe = [sender locationInView:self.view];
+- (IBAction)onRightSwipeOnTable:(UISwipeGestureRecognizer *)gestureRecognizer {
+
+    CGPoint swipeLocation = [gestureRecognizer locationInView:self.toDoListTableView];
+    //point swiped in tableview
+    NSIndexPath *swipedIndexPath = [self.toDoListTableView indexPathForRowAtPoint:swipeLocation];
+    //gives index path of where you swiped based on location passed in
+    UITableViewCell *swipedCell = [self.toDoListTableView cellForRowAtIndexPath:swipedIndexPath];
+    //tells you which cell is specifically swiped based on the index path passed in
+    if (swipedCell.textLabel.textColor == [UIColor blackColor]) {
+        swipedCell.textLabel.textColor = [UIColor greenColor];
     }
-    if (CGRectContainsPoint(self.cellBounds, self.pointOfSwipe)) {
-        self.selectedCell.textColor = [UIColor redColor];
+    else if (swipedCell.textLabel.textColor ==[UIColor greenColor])
+    {
+        swipedCell.textLabel.textColor = [UIColor yellowColor];
+
+    }
+    else if (swipedCell.textLabel.textColor == [UIColor yellowColor])
+    {
+        swipedCell.textLabel.textColor = [UIColor redColor];
     }
     
 }
@@ -54,6 +74,7 @@
     if ([sender.title isEqualToString:@"Edit"]) {
         sender.title = @"Done";
         [self.toDoListTableView setEditing:YES animated:YES];
+
     } else{
         sender.title = @"Edit";
         [self.toDoListTableView setEditing:NO animated:YES];
@@ -75,13 +96,39 @@
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        [self.toDoListArray removeObjectAtIndex:indexPath.row];
+        self.deleteRow = indexPath;
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Are You Sure?"
+                                                        message:@"It's Final"
+                                                       delegate:self
+                                              cancelButtonTitle:@"Don't Delete"
+                                              otherButtonTitles: @"Delete", nil];
+        [alert show];
+
     }
-    [self.toDoListTableView reloadData];
 }
+- (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
+    if (buttonIndex == 1) {
+        [self.toDoListArray removeObjectAtIndex:self.deleteRow.row];
+        [self.toDoListTableView reloadData];
+
+
+    }
+}
+
+
 
 -(BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
     return YES;
 }
+
+-(void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)sourceIndexPath toIndexPath:(NSIndexPath *)destinationIndexPath {
+    id buffer = [self.toDoListArray objectAtIndex:sourceIndexPath.row];
+    [self.toDoListArray removeObjectAtIndex:sourceIndexPath.row];
+    [self.toDoListArray insertObject:buffer atIndex:destinationIndexPath.row];
+}
+
+
+
+
 
 @end

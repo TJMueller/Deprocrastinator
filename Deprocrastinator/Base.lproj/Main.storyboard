@@ -71,7 +71,7 @@
                 </tapGestureRecognizer>
                 <swipeGestureRecognizer direction="right" id="obm-OW-hh4">
                     <connections>
-                        <action selector="swipeToChangeColor:" destination="vXZ-lx-hvc" id="in0-WM-cD9"/>
+                        <action selector="onRightSwipeOnTable:" destination="vXZ-lx-hvc" id="qEf-n4-k8f"/>
                         <outlet property="delegate" destination="vXZ-lx-hvc" id="AjA-5M-MD2"/>
                     </connections>
                 </swipeGestureRecognizer>
