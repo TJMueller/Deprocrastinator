@@ -13,8 +13,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property NSMutableArray *toDoListArray;
 @property (weak, nonatomic) IBOutlet UITableView *toDoListTableView;
-@property UITableViewCell *currentCellLabel;
-@property CGPoint pointOfTap;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 
 @end
 
@@ -38,30 +37,28 @@
     [self.toDoListTableView reloadData];
 }
 
+-(IBAction)onEditButtonPressed:(id)sender {
+    
+}
+
+-(void)setEditing:(BOOL)editing animated:(BOOL)animated {
+    [super setEditing:editing animated:animated];
+    if (editing) {
+        self.editButtonItem.title = NSLocalizedString(@"Done", @"Done");
+    } else {
+        self.editButtonItem.title = NSLocalizedString(@"Edit", @"Edit");
+    }
+}
+
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CellID"];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [self.toDoListArray objectAtIndex:indexPath.row]];
     return cell;
 }
 
-# pragma mark - Gesture Recognition
-
-- (IBAction)onCellTap:(UITapGestureRecognizer)sender{
-    if (sender.state == UIGestureRecognizerStateEnded){
-
-    }
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    UITableViewCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    cell.textColor = [UIColor greenColor];
 }
-
-- (void)findCellUsingPoint:(CGPoint)point {
-    for (UITableViewCell *cell in self.toDoListArray) {
-        if (CGRectContainsPoint(cell.frame, point)) {
-            self.currentCellLabel = cell;
-        }
-    }
-}
-
-
-
-
 
 @end
