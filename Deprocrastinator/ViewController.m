@@ -8,10 +8,13 @@
 
 #import "ViewController.h"
 
-@interface ViewController () <UITableViewDelegate, UITableViewDataSource, UIAlertViewDelegate, UITextFieldDelegate>
+@interface ViewController () <UITableViewDelegate,UITableViewDataSource, UIAlertViewDelegate, UITextFieldDelegate, UIGestureRecognizerDelegate>
+
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property NSMutableArray *toDoListArray;
 @property (weak, nonatomic) IBOutlet UITableView *toDoListTableView;
+@property UITableViewCell *currentCellLabel;
+@property CGPoint pointOfTap;
 
 @end
 
@@ -20,7 +23,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.toDoListArray = [NSMutableArray arrayWithObjects: @"Laundry", @"Homework", @"Call mom", @"cook dinner", nil];
-    // Do any additional setup after loading the view, typically from a nib.
+    
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -30,12 +33,9 @@
 - (IBAction)onAddButtonPressed:(UIBarButtonItem *)sender {
     NSString *text = self.textField.text;
     [self.toDoListArray addObject:text];
+    [self.textField endEditing:YES];
+    self.textField.text = @"";
     [self.toDoListTableView reloadData];
-}
-
--(BOOL)textFieldShouldReturn:(UITextField *)textField {
-    [self.textField resignFirstResponder];
-    return YES;
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -43,6 +43,24 @@
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [self.toDoListArray objectAtIndex:indexPath.row]];
     return cell;
 }
+
+# pragma mark - Gesture Recognition
+
+- (IBAction)onCellTap:(UITapGestureRecognizer)sender{
+    if (sender.state == UIGestureRecognizerStateEnded){
+
+    }
+}
+
+- (void)findCellUsingPoint:(CGPoint)point {
+    for (UITableViewCell *cell in self.toDoListArray) {
+        if (CGRectContainsPoint(cell.frame, point)) {
+            self.currentCellLabel = cell;
+        }
+    }
+}
+
+
 
 
 
