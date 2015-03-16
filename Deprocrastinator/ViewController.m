@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property NSMutableArray *toDoListArray;
 @property (weak, nonatomic) IBOutlet UITableView *toDoListTableView;
+@property BOOL shouldEdit;
 @end
 
 @implementation ViewController
@@ -35,23 +36,20 @@
 }
 
 -(IBAction)onEditButtonPressed:(UIBarButtonItem *)sender {
+    
     if ([sender.title isEqualToString:@"Edit"]) {
         sender.title = @"Done";
+        [self.toDoListTableView setEditing:YES animated:YES];
     } else{
         sender.title = @"Edit";
+        [self.toDoListTableView setEditing:NO animated:YES];
     }
 
-    if ([self.toDoListTableView isEditing]) {
-        [self.toDoListTableView setEditing:NO animated:YES];
-    } else {
-        [self.toDoListTableView setEditing:YES animated:YES];
-    }
 }
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CellID"];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [self.toDoListArray objectAtIndex:indexPath.row]];
-    [self tableView:tableView canEditRowAtIndexPath:indexPath];
     return cell;
 }
 
