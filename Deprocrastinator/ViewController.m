@@ -14,6 +14,9 @@
 @property NSMutableArray *toDoListArray;
 @property (weak, nonatomic) IBOutlet UITableView *toDoListTableView;
 @property BOOL shouldEdit;
+@property UITableViewCell *selectedCell;
+@property CGRect cellBounds;
+@property CGPoint pointOfSwipe;
 @end
 
 @implementation ViewController
@@ -25,6 +28,12 @@
 }
 
 -(IBAction)swipeToChangeColor:(UISwipeGestureRecognizer *)sender {
+    if (sender.state == UIGestureRecognizerStateEnded) {
+        self.pointOfSwipe = [sender locationInView:self.view];
+    }
+    if (CGRectContainsPoint(self.cellBounds, self.pointOfSwipe)) {
+        self.selectedCell.textColor = [UIColor redColor];
+    }
     
 }
 
@@ -54,6 +63,8 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CellID"];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [self.toDoListArray objectAtIndex:indexPath.row]];
+    self.cellBounds = cell.bounds;
+    self.selectedCell = cell;
     return cell;
 }
 
@@ -63,11 +74,9 @@
 }
 
 -(void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
-
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         [self.toDoListArray removeObjectAtIndex:indexPath.row];
     }
-
     [self.toDoListTableView reloadData];
 }
 
