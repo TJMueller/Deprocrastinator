@@ -44,17 +44,19 @@
     //tells you which cell is specifically swiped based on the index path passed in
     if (swipedCell.textLabel.textColor == [UIColor blackColor]) {
         swipedCell.textLabel.textColor = [UIColor greenColor];
+        [self.toDoListColor setObject:[UIColor greenColor] atIndexedSubscript:swipedIndexPath.row];
     }
     else if (swipedCell.textLabel.textColor ==[UIColor greenColor])
     {
         swipedCell.textLabel.textColor = [UIColor yellowColor];
-
+        [self.toDoListColor setObject:[UIColor yellowColor] atIndexedSubscript:swipedIndexPath.row];
     }
     else if (swipedCell.textLabel.textColor == [UIColor yellowColor])
     {
         swipedCell.textLabel.textColor = [UIColor redColor];
+        [self.toDoListColor setObject:[UIColor redColor] atIndexedSubscript:swipedIndexPath.row];
     }
-    
+
 }
 
 -(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -64,6 +66,7 @@
 - (IBAction)onAddButtonPressed:(UIBarButtonItem *)sender {
     NSString *text = self.textField.text;
     [self.toDoListArray addObject:text];
+    [self.toDoListColor addObject:[UIColor blackColor]];
     [self.textField endEditing:YES];
     self.textField.text = @"";
     [self.toDoListTableView reloadData];
@@ -84,6 +87,9 @@
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CellID"];
     cell.textLabel.text = [NSString stringWithFormat:@"%@", [self.toDoListArray objectAtIndex:indexPath.row]];
+    //TJTrial
+    cell.textColor = [self.toDoListColor objectAtIndex:indexPath.row];
+    //Superfluous
     self.cellBounds = cell.bounds;
     self.selectedCell = cell;
     return cell;
@@ -109,6 +115,7 @@
 - (void)alertView:(UIAlertView *)alertView didDismissWithButtonIndex:(NSInteger)buttonIndex {
     if (buttonIndex == 1) {
         [self.toDoListArray removeObjectAtIndex:self.deleteRow.row];
+        [self.toDoListColor removeObjectAtIndex:self.deleteRow.row];
         [self.toDoListTableView reloadData];
 
 
@@ -125,6 +132,10 @@
     id buffer = [self.toDoListArray objectAtIndex:sourceIndexPath.row];
     [self.toDoListArray removeObjectAtIndex:sourceIndexPath.row];
     [self.toDoListArray insertObject:buffer atIndex:destinationIndexPath.row];
+
+    id buffer1 = [self.toDoListColor objectAtIndex:sourceIndexPath.row];
+    [self.toDoListColor removeObjectAtIndex:sourceIndexPath.row];
+    [self.toDoListColor insertObject:buffer1 atIndex:destinationIndexPath.row];
 }
 
 
