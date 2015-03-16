@@ -13,7 +13,6 @@
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property NSMutableArray *toDoListArray;
 @property (weak, nonatomic) IBOutlet UITableView *toDoListTableView;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *editButton;
 
 @end
 
@@ -37,18 +36,17 @@
     [self.toDoListTableView reloadData];
 }
 
--(IBAction)onEditButtonPressed:(id)sender {
+-(IBAction)onEditButtonPressed:(UIBarButtonItem *)sender {
+    if ([sender.title isEqualToString:@"Edit"]) {
+        sender.title = @"Done";
+    } else{
+        sender.title = @"Edit";
+    }
     
 }
 
--(void)setEditing:(BOOL)editing animated:(BOOL)animated {
-    [super setEditing:editing animated:animated];
-    if (editing) {
-        self.editButtonItem.title = NSLocalizedString(@"Done", @"Done");
-    } else {
-        self.editButtonItem.title = NSLocalizedString(@"Edit", @"Edit");
-    }
-}
+
+
 
 -(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"CellID"];
